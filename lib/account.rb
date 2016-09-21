@@ -9,22 +9,28 @@ class Account
 
   def deposit(amount)
     update_balance(amount, true)
-    @transactions.push [Time.now.strftime("%d/%m/%Y"), amount, nil, balance]
+    add [Time.now.strftime("%d/%m/%Y"), amount, nil, balance]
   end
 
   def withdraw(amount)
     update_balance(amount, false)
-    @transactions.push [Time.now.strftime("%d/%m/%Y"), nil, amount, balance]
+    add [Time.now.strftime("%d/%m/%Y"), nil, amount, balance]
   end
 
   def statement
     puts "date || credit || debit || balance"
-    @transactions.reverse_each do |transaction|
+    transactions.reverse_each do |transaction|
       puts "#{transaction[0]} || #{transaction[1]} || #{transaction[2]} || #{transaction[3]}"
     end
   end
 
   private
+
+  attr_reader :transactions
+
+  def add(array)
+    @transactions.push array
+  end
 
   def update_balance(amount, deposit)
     if deposit
